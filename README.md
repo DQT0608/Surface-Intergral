@@ -24,3 +24,5 @@ Biểu diễn trực tiếp mặt cong $S$ cùng hệ trục tọa độ Oxyz th
 - Thư viện:
   - Xử lý toán học: SymPy, SciPy, NumPy.
   - Giaodieen và đồ họa: CustomTkinter, Matplotlib.
+# Hình ảnh của ứng dụng:
+<img width="1919" height="1007" alt="Ứng dụng tính toán tích phân mặt" src="https://github.com/user-attachments/assets/eada5ab1-3a65-42a4-ae9c-d8eb43b756fe" />
