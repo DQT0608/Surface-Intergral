@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 
-# Thiết lập giao diện người dùng (Theme & Màu sắc)
+# Thiết lập giao diện người dùng
 ctk.set_appearance_mode("System")
 ctk.set_default_color_theme("blue")
 
@@ -24,27 +24,23 @@ class AppGiaiTich(ctk.CTk):
         self.grid_columnconfigure(1, weight=1)
         self.grid_rowconfigure(0, weight=1)
 
-        # ==========================================
-        # KHU VỰC TRÁI (SIDEBAR - Nơi nhập dữ liệu đầu vào)
-        # ==========================================
+        # KHU VỰC TRÁI (nhập dữ liệu đầu vào)
         self.sidebar = ctk.CTkScrollableFrame(self, width=450, label_text="⚙️ CẤU HÌNH BÀI TOÁN")
         self.sidebar.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
         self.setup_sidebar()
 
-        # ==========================================
-        # KHU VỰC PHẢI (MAIN - Hiển thị kết quả toán học và đồ thị)
-        # ==========================================
+        # KHU VỰC PHẢI (hiển thị kết quả toán học và đồ thị)
         self.main_area = ctk.CTkFrame(self)
         self.main_area.grid(row=0, column=1, sticky="nsew", padx=10, pady=10)
         
         self.lbl_res_title = ctk.CTkLabel(self.main_area, text="KẾT QUẢ TOÁN HỌC", font=("Arial", 16, "bold"))
         self.lbl_res_title.pack(pady=5)
 
-        # Ô văn bản hiển thị các bước trung gian và giá trị số
+        # Ô hiển thị các bước trung gian và giá trị số
         self.txt_result = ctk.CTkTextbox(self.main_area, height=180, font=("Consolas", 14))
         self.txt_result.pack(fill="x", padx=20, pady=5)
 
-        # Frame dành riêng để render công thức LaTeX từ SymPy
+        # Frame render công thức LaTeX từ SymPy
         self.latex_frame = ctk.CTkFrame(self.main_area, height=50, fg_color="transparent")
         self.latex_frame.pack(fill="x", padx=20, pady=0)
 
@@ -55,13 +51,13 @@ class AppGiaiTich(ctk.CTk):
         self.cap_nhat_giao_dien_khuon_mau("Paraboloid úp") 
 
     def setup_sidebar(self):
-        # 1. Menu chọn loại bài toán: Tính diện tích, Loại 1 (Vô hướng) hoặc Loại 2 (Vector)
+        # 1. Menu chọn loại bài toán: tính diện tích loại 1 hoặc loại 2 
         ctk.CTkLabel(self.sidebar, text="1️⃣ Chọn loại bài toán:", font=("Arial", 13, "bold")).pack(anchor="w", pady=(10,0))
         self.loai_tp_var = ctk.StringVar(value="Tính Diện Tích Mặt Cong")
         ctk.CTkOptionMenu(self.sidebar, variable=self.loai_tp_var, 
                           values=["Tính Diện Tích Mặt Cong", "Tích phân mặt Loại 1", "Tích phân mặt Loại 2"]).pack(fill="x", pady=5)
 
-        # 2. Thiết lập mặt cong S: Cho phép chọn hình mẫu có sẵn hoặc tự nhập phương trình tham số
+        # 2. Thiết lập mặt cong S: cho phép chọn hình mẫu có sẵn hoặc tự nhập phương trình tham số
         ctk.CTkLabel(self.sidebar, text="2️⃣ Thiết lập mặt cong S:", font=("Arial", 13, "bold")).pack(anchor="w", pady=(10,0))
         self.tab_S = ctk.CTkTabview(self.sidebar, height=200)
         self.tab_S.pack(fill="x", pady=5)
@@ -69,7 +65,7 @@ class AppGiaiTich(ctk.CTk):
         tab_khuon_mau = self.tab_S.add("Khuôn mẫu")
         tab_nhap_tay = self.tab_S.add("Nhập tay")
 
-        # Cấu hình Tab Khuôn Mẫu (Mặt cầu, Trụ, Nón...)
+        # Cấu hình tab khuôn mẫu (cầu, trụ, nón, ...)
         self.km_hinh_var = ctk.StringVar(value="Paraboloid úp")
         ctk.CTkOptionMenu(tab_khuon_mau, variable=self.km_hinh_var, 
                           values=["Paraboloid úp", "Mặt cầu", "Mặt trụ", "Mặt nón", "Mặt phẳng"],
@@ -78,7 +74,7 @@ class AppGiaiTich(ctk.CTk):
         self.frame_km_inputs = ctk.CTkFrame(tab_khuon_mau, fg_color="transparent")
         self.frame_km_inputs.pack(fill="both", expand=True)
 
-        # Cấu hình Tab Nhập Tay (Tự do tham số hóa hoặc dùng tọa độ Descartes)
+        # Cấu hình tab Nhập tay (tự do tham số hóa hoặc tọa độ Descartes)
         self.nt_loai_var = ctk.StringVar(value="Tham số hóa R(u,v)")
         ctk.CTkOptionMenu(tab_nhap_tay, variable=self.nt_loai_var, 
                           values=["Tham số hóa R(u,v)", "Descartes z=f(x,y)", "Descartes y=g(x,z)", "Descartes x=h(y,z)"]).pack(fill="x", pady=5)
@@ -97,7 +93,7 @@ class AppGiaiTich(ctk.CTk):
         
         self.nt_1.insert(0, "u*cos(v)"); self.nt_2.insert(0, "u*sin(v)"); self.nt_3.insert(0, "2 - u**2")
 
-        # Thiết lập miền D: Cận cho biến u và v
+        # Thiết lập miền D: cận cho biến u và v
         ctk.CTkLabel(self.sidebar, text="Cận tích phân (Miền D):", font=("Arial", 12, "bold")).pack(anchor="w", pady=(15, 5))
         frame_can = ctk.CTkFrame(self.sidebar, fg_color="transparent")
         frame_can.pack(fill="x", padx=5)
@@ -122,7 +118,7 @@ class AppGiaiTich(ctk.CTk):
         self.can_u_min.insert(0, "0"); self.can_u_max.insert(0, "2")
         self.can_v_min.insert(0, "0"); self.can_v_max.insert(0, "2*pi")
 
-        # 3. Nhập hàm tích phân f(x,y,z) cho Loại 1 hoặc Trường Vector (P,Q,R) cho Loại 2
+        # 3. Nhập hàm tích phân f(x,y,z) cho loại 1 hoặc Trường Vector (P,Q,R) cho loại 2
         ctk.CTkLabel(self.sidebar, text="3️⃣ Hàm / Trường Vector:", font=("Arial", 13, "bold")).pack(anchor="w", pady=(10,0))
         self.tab_F = ctk.CTkTabview(self.sidebar, height=150)
         self.tab_F.pack(fill="x", pady=5)
@@ -137,7 +133,7 @@ class AppGiaiTich(ctk.CTk):
         self.r_ent = ctk.CTkEntry(tab_vector, placeholder_text="R(x,y,z)"); self.r_ent.pack(fill="x", pady=2)
         self.p_ent.insert(0, "0"); self.q_ent.insert(0, "0"); self.r_ent.insert(0, "z")
 
-        # 4. Chọn công cụ giải: SciPy (Nhanh, xấp xỉ số) hoặc SymPy (Chậm, kết quả ký hiệu chính xác)
+        # 4. Chọn công cụ giải: SciPy hoặc SymPy (đối với SymPy, nếu không giải được công thức chặn sẽ thông báo và khuyến nghị chuyển sang SciPy)
         ctk.CTkLabel(self.sidebar, text="4️⃣ Phương pháp giải:", font=("Arial", 13, "bold")).pack(anchor="w", pady=(10,0))
         self.pp_giai_var = ctk.StringVar(value="Tính nhanh Xấp xỉ (SciPy)")
         ctk.CTkRadioButton(self.sidebar, text="Tính nhanh Xấp xỉ (SciPy)", variable=self.pp_giai_var, value="SciPy").pack(anchor="w", pady=2)
@@ -270,7 +266,7 @@ class AppGiaiTich(ctk.CTk):
             ru, rv = sp.diff(r, self.u), sp.diff(r, self.v)
             n = ru.cross(rv)
 
-            # 4. Phân loại và xây dựng biểu thức dưới dấu tích phân (Integrand)
+            # 4. Phân loại và xây dựng biểu thức dưới dấu tích phân
             if "Loại 1" in loai_tp or "Diện Tích" in loai_tp:
                 # Tích phân loại 1: f * |n| du dv
                 norm_n = sp.simplify(sp.sqrt(sp.trigsimp(n.dot(n))))
@@ -283,7 +279,7 @@ class AppGiaiTich(ctk.CTk):
                 f_uv = f_expr.subs({self.x: x_e, self.y: y_e, self.z: z_e})
                 integrand = sp.simplify(f_uv * norm_n)
             else: 
-                # Tích phân loại 2 (Thông lượng): F . n du dv (Tích vô hướng trường Vector F và pháp tuyến n)
+                # Tích phân loại 2: F . n du dv (Tích vô hướng trường Vector F và pháp tuyến n)
                 P = sp.sympify(self.p_ent.get(), locals=self.local_dict)
                 Q = sp.sympify(self.q_ent.get(), locals=self.local_dict)
                 R_vec = sp.sympify(self.r_ent.get(), locals=self.local_dict)
@@ -297,7 +293,7 @@ class AppGiaiTich(ctk.CTk):
             if "SymPy" in pp_giai:
                 self.txt_result.insert("end", "⏳ Đang tính chính xác (SymPy), có thể hơi lâu...\n")
                 self.update()
-                # Giải bằng giải tích (tính toán ký hiệu)
+                # Giải bằng giải tích 
                 result = sp.integrate(integrand, (self.u, u_min_v, u_max_v), (self.v, v_min_v, v_max_v))
                 if result.has(sp.Integral):
                     self.txt_result.insert("end", "⚠️ SymPy không giải ra công thức chặn. Hãy chuyển sang SciPy.\n")
@@ -332,7 +328,7 @@ class AppGiaiTich(ctk.CTk):
         ax = fig.add_subplot(111, projection='3d')
 
         try:
-            # Tạo lưới giá trị (mesh) cho u và v
+            # Tạo lưới giá trị cho u và v
             u_arr = np.linspace(float(sp.N(u_mi)), float(sp.N(u_ma)), 40)
             v_arr = np.linspace(float(sp.N(v_mi)), float(sp.N(v_ma)), 40)
             U, V = np.meshgrid(u_arr, v_arr)
@@ -348,7 +344,7 @@ class AppGiaiTich(ctk.CTk):
             if np.isscalar(Y): Y = np.full_like(U, Y)
             if np.isscalar(Z): Z = np.full_like(U, Z)
 
-            # Vẽ bề mặt với màu sắc 'plasma'
+            # Vẽ bề mặt với màu sắc
             ax.plot_surface(X, Y, Z, cmap='plasma', alpha=0.8, edgecolor='black', linewidth=0.3)
 
             # Đánh dấu gốc tọa độ
